@@ -45,27 +45,9 @@
 
 <hr>
 
-
-<div>
-  <div>
-    <h2>
-      Edit quiz
-    </h2>
-
-    <form action="/modify_quiz/<%= @the_quiz.id %>"  method="post" >
-      <div>
-        <label for="topic_box">
-          Topic
-        </label>
-
-        <input type="text" id="topic_box" name="query_topic" value="<%= @the_quiz.topic %>">
-      </div>
-
-      <button>
-        Update quiz
-      </button>
-    </form>
-  </div>
-</div>
-
-<hr>
+<dl>
+<% @the_quiz.messages.each do |a_message| %>
+  <dt><%= a_message.role %></dt>
+  <dd><%= a_message.content %></dd>
+<% end %>
+</dl>
