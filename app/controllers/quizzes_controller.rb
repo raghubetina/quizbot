@@ -14,6 +14,17 @@ class QuizzesController < ApplicationController
 
     @the_quiz = matching_quizzes.at(0)
 
+    @message_list = Array.new
+
+    @the_quiz.messages.order(:created_at).each do |a_message|
+      hash_version = {
+        "role" => a_message.role,
+        "content" => a_message.content,
+      }
+
+      @message_list.push(hash_version)
+    end
+
     render({ :template => "quizzes/show" })
   end
 
@@ -32,7 +43,7 @@ class QuizzesController < ApplicationController
       system_message.content = "You are a #{the_quiz.topic} tutor. Ask the user five questions to assess their #{the_quiz.topic} proficiency. Start with an easy question. After each answer, increase or decrease the difficulty of the next question based on how well the user answered.
 
 In the end, provide a score between 0 and 10."
-      
+
       system_message.save
 
       # Create the first user message
@@ -43,8 +54,38 @@ In the end, provide a score between 0 and 10."
       user_message.content = "Can you assess my #{the_quiz.topic} proficiency?"
 
       user_message.save
-      
+
       # Create the first assisstant message
+
+      @message_list = Array.new
+
+      the_quiz.messages.order(:created_at).each do |a_message|
+        hash_version = {
+          "role" => a_message.role,
+          "content" => a_message.content,
+        }
+
+        @message_list.push(hash_version)
+      end
+
+      client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_API_KEY"))
+
+      # Call the API to get the next message from GPT
+      @api_response = client.chat(
+        parameters: {
+          model: "gpt-3.5-turbo",
+          messages: @message_list,
+        },
+      )
+
+      assistant_content = @api_response.fetch("choices").at(0).fetch("message").fetch("content")
+
+      assistant_message = Message.new
+      assistant_message.role = "assistant"
+      assistant_message.quiz_id = the_quiz.id
+      assistant_message.content = assistant_content
+
+      assistant_message.save
 
       redirect_to("/quizzes/#{the_quiz.id}", { :notice => "Quiz created successfully." })
     else
@@ -60,7 +101,7 @@ In the end, provide a score between 0 and 10."
 
     if the_quiz.valid?
       the_quiz.save
-      redirect_to("/quizzes/#{the_quiz.id}", { :notice => "Quiz updated successfully."} )
+      redirect_to("/quizzes/#{the_quiz.id}", { :notice => "Quiz updated successfully." })
     else
       redirect_to("/quizzes/#{the_quiz.id}", { :alert => the_quiz.errors.full_messages.to_sentence })
     end
@@ -72,6 +113,6 @@ In the end, provide a score between 0 and 10."
 
     the_quiz.destroy
 
-    redirect_to("/quizzes", { :notice => "Quiz deleted successfully."} )
+    redirect_to("/quizzes", { :notice => "Quiz deleted successfully." })
   end
 end

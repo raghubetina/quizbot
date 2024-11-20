@@ -46,8 +46,10 @@
 <hr>
 
 <dl>
-<% @the_quiz.messages.each do |a_message| %>
+<% @the_quiz.messages.order(:created_at).each do |a_message| %>
   <dt><%= a_message.role %></dt>
   <dd><%= a_message.content %></dd>
 <% end %>
 </dl>
+
+<%= @message_list %>
