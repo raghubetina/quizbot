@@ -57,7 +57,7 @@ In the end, provide a score between 0 and 10."
 
       # Create the first assisstant message
 
-      @message_list = Array.new
+      message_list = Array.new
 
       the_quiz.messages.order(:created_at).each do |a_message|
         hash_version = {
@@ -65,20 +65,20 @@ In the end, provide a score between 0 and 10."
           "content" => a_message.content,
         }
 
-        @message_list.push(hash_version)
+        message_list.push(hash_version)
       end
 
       client = OpenAI::Client.new(access_token: ENV.fetch("OPENAI_API_KEY"))
 
       # Call the API to get the next message from GPT
-      @api_response = client.chat(
+      api_response = client.chat(
         parameters: {
           model: "gpt-3.5-turbo",
-          messages: @message_list,
+          messages: message_list,
         },
       )
 
-      assistant_content = @api_response.fetch("choices").at(0).fetch("message").fetch("content")
+      assistant_content = api_response.fetch("choices").at(0).fetch("message").fetch("content")
 
       assistant_message = Message.new
       assistant_message.role = "assistant"
