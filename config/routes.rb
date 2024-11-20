@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  # get("/", { :controller => "quizzes", :action => "index" })
+  
+  root to: "quizzes#index"
+
   # Routes for the Message resource:
 
   # CREATE
