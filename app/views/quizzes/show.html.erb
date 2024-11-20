@@ -46,10 +46,28 @@
 <hr>
 
 <dl>
-<% @the_quiz.messages.order(:created_at).each do |a_message| %>
-  <dt><%= a_message.role %></dt>
-  <dd><%= a_message.content %></dd>
-<% end %>
+  <% @the_quiz.messages.order(:created_at).each do |a_message| %>
+    <dt><%= a_message.role %></dt>
+    <dd><%= a_message.content %></dd>
+  <% end %>
 </dl>
 
+<h2>
+  Add a new message
+</h2>
 
+<form action="/insert_message" method="post">
+  <div>
+    <label for="content_box">
+      Content
+    </label>
+
+    <textarea id="content_box" name="query_content" rows="3"></textarea>
+  </div>
+
+  <input type="hidden" id="quiz_id_box" name="query_quiz_id" value="<%= @the_quiz.id %>">
+
+  <button>
+    Create message
+  </button>
+</form>
