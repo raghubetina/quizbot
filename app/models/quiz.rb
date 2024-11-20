@@ -8,4 +8,7 @@
 #  updated_at :datetime         not null
 #
 class Quiz < ApplicationRecord
+  validates :topic, presence: true
+  
+  has_many  :messages, dependent: :destroy
 end
