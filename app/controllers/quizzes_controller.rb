@@ -55,7 +55,7 @@ In the end, provide a score between 0 and 10."
 
       user_message.save
 
-      # Create the first assisstant message
+      # Create the first assistant message
 
       message_list = Array.new
 
