@@ -46,7 +46,7 @@ class MessagesController < ApplicationController
       # Call the API to get the next message from GPT
       api_response = client.chat(
         parameters: {
-          model: "gpt-3.5-turbo",
+          model: "gpt-4o",
           messages: message_list,
         },
       )

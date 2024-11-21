@@ -58,16 +58,16 @@
 
 <form action="/insert_message" method="post">
   <div>
-    <label for="content_box">
+    <label for="content_box" class="form-label">
       Content
     </label>
 
-    <textarea id="content_box" name="query_content" rows="3"></textarea>
+    <textarea id="content_box" name="query_content" rows="3" class="form-control"></textarea>
   </div>
 
   <input type="hidden" id="quiz_id_box" name="query_quiz_id" value="<%= @the_quiz.id %>">
 
-  <button>
+  <button class="btn btn-success mt-4">
     Create message
   </button>
 </form>
